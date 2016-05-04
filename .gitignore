@@ -28,3 +28,4 @@ scalajvm/upload/*
 .target
 bin/
 
+.DS_Store
