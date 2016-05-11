@@ -1,17 +1,16 @@
 package example
 
 import com.felstar.scalajs.vue.Vue
-import example.JsDay._
 import org.scalajs.dom.ext.Ajax
+import org.scalajs.dom.raw.XMLHttpRequest
 import shared.RotaMeta
 
 import scala.scalajs.js
 import js.Dynamic.literal
 
 import scalatags.Text.all._
-import org.scalajs.dom
 import upickle.default._
-import scalajs.js.JSConverters._
+import js.JSConverters._
 import scala.concurrent.ExecutionContext.Implicits.global
 
 @js.native
@@ -28,15 +27,11 @@ object ExampleJS extends js.JSApp {
       template=Summary.template.toString(),
       data=()=>literal(metas=js.Array()),
       route=literal(data=(transition: Transition)=>
-        /*Ajax.get(
-          url = "/month/all"
-        ).map{ r => if (r.status == 200) {
-          //val rotaMetas = read[Seq[RotaMeta]](r.responseText)
-          //transition.next(literal(
-          //  metas=rotaMetas.map(JsRotaMeta.rotameta2jsrotameta).toJSArray
-          //))
-        }}*/ // <== this code somehow sets a value$1 in the data! and calls next 2 times
-        ////////////must look at the resulting javascript
+        Ajax.get(url = "/month/all").map{ case xhr =>
+          val metas: Seq[RotaMeta] = read[Seq[RotaMeta]](xhr.responseText)
+          val jsMetas: js.Array[JsRotaMeta] = metas.map(JsRotaMeta.rotameta2jsrotameta).toJSArray
+          literal(metas=jsMetas)
+        }.toJSPromise
       )
     )).asInstanceOf[Summary]
 
