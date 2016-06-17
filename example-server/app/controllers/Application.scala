@@ -85,4 +85,12 @@ object Application extends Controller {
       Ok(upickle.json.write(upickle.default.writeJs(t.map{ m => RotaMeta(m._1, m._2, m._3)}))).withHeaders("content-type" -> "application/json")
     }
   }
+
+  def getMonth(id: Int) = Action.async {
+    val rota = RotaSlickStore.get(id)
+
+    rota.map{ t =>
+      Ok(upickle.json.write(upickle.default.writeJs[Seq[Day]](upickle.default.read[Seq[Day]](t._3)))).as("application/json")
+    }
+  }
 }

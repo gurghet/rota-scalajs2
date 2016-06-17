@@ -33,6 +33,7 @@ lazy val exampleServer = (project in file("example-server")).settings(
 lazy val exampleClient = (project in file("example-client")).settings(
   scalaVersion := scalaV,
   persistLauncher := true,
+  resolvers += "jitpack" at "https://jitpack.io",
   persistLauncher in Test := false,
   libraryDependencies ++= Seq(
     "org.scala-js" %%% "scalajs-dom" % "0.8.1",

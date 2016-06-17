@@ -26,3 +26,25 @@ trait CheckboxBtn extends Vue {
 object CheckboxBtn {
   val checkboxBtn: Tag = "checkbox-btn".tag
 }
+
+@js.native
+trait RadioGroup extends Vue {
+  var style: String = js.native
+  var value: Int = js.native
+}
+
+object RadioGroup {
+  val radioGroup: Tag = "radio-group".tag
+}
+
+@js.native
+trait RadioBtn extends Vue {
+  override val $parent: RadioGroup = js.native
+  var value: Int = js.native
+  var checked: Boolean = js.native
+  def style: String = js.native
+}
+
+object RadioBtn {
+  val radioBtn: Tag = "radio-btn".tag
+}

@@ -12,8 +12,9 @@ POST          /todos/update/:id            controllers.TodoController.update(id:
 DELETE        /todos/delete/:id            controllers.TodoController.delete(id: Long)
 POST          /todos/clear                 controllers.TodoController.clear
 
-PUT           /month/:year/:month          controllers.Application.createMonth(year: Int, month: Int)
 GET           /month/all                   controllers.Application.allMonths
+GET           /month/:id                   controllers.Application.getMonth(id: Int)
+PUT           /month/:year/:month          controllers.Application.createMonth(year: Int, month: Int)
 
 GET           /hangman                     controllers.HangmanController.index
 POST          /hangman/start/:level        controllers.HangmanController.start(level: Int)

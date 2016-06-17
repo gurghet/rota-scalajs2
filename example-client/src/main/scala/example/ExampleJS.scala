@@ -2,7 +2,6 @@ package example
 
 import com.felstar.scalajs.vue.Vue
 import org.scalajs.dom.ext.Ajax
-import org.scalajs.dom.raw.XMLHttpRequest
 import shared.RotaMeta
 
 import scala.scalajs.js
@@ -94,6 +93,60 @@ object ExampleJS extends js.JSApp {
       )
     ))
 
+    Vue.component("radio-btn", literal(
+      template=label(
+        `class`:="btn",
+        ":class".attr:="""{
+             'active':active,
+             'btn-success':style === 'success',
+             'btn-warning':style === 'warning',
+             'btn-info':style === 'info',
+             'btn-danger':style === 'danger',
+             'btn-default':style === 'default',
+             'btn-primary':style === 'primary'
+             }""",
+        input(`type`:="radio",
+          ":checked".attr:="checked",
+          "v-on:click".attr:="handleClick"),
+        slot()
+      ).render,
+      props=literal(
+        value=literal(
+          "type" -> js.eval("Number"),
+          "default" -> 0
+        ),
+        checked=literal(
+          "type" -> js.eval("Boolean"),
+          "default" -> js.eval("false")
+        )
+      ),
+      computed=literal(
+        style=((th: RadioBtn) => th.$parent.style): js.ThisFunction,
+        active=((th: RadioBtn) => th.$parent.value == th.value): js.ThisFunction
+      ),
+      methods=literal(
+        handleClick=((vm: RadioBtn) => {
+          val parent = vm.$parent
+          parent.value = vm.value
+        }): js.ThisFunction
+      ),
+      created=((vm: RadioBtn) => {
+        if (vm.$parent.value == vm.value) {
+          vm.checked = true
+        } else if (vm.$parent.value != 0 && vm.checked) {
+          vm.$parent.value = vm.value
+        }
+      }): js.ThisFunction
+    ))
+
+    Vue.component("radio-group", literal(
+      template=div(`class`:="btn-group", "data-toggle".attr:="buttons", "slot".tag).render,
+      props=literal(
+        "value" -> literal("default" -> 0, "twoWay" -> true),
+        "style" -> literal("default" -> "default")
+      )
+    ))
+
     val creationDialog = Vue.extend(CreationDialog())
 
     val App = Vue.extend(literal())
@@ -105,7 +158,7 @@ object ExampleJS extends js.JSApp {
       "/bar" -> literal(component=Bar),
       "/rota/:id" -> literal(
         name="rota",
-        component=Bar
+        component=Vue.extend(EnterPreferences())
       ),
       "/rota/new" -> literal(
         name="create",
